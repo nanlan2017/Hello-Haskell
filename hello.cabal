@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e3473c758644cac4bae87dbdabdd81e9a98d5170e6aa3849561134aff614ce98
+-- hash: fa1640797dd2ff2cb600162a8725696f773d3f6d9702a9a6b65e7f43dfad0759
 
 name:           hello
 version:        0.1.0.0
@@ -26,7 +26,7 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      ListTest
   other-modules:
       Paths_hello
   hs-source-dirs:
