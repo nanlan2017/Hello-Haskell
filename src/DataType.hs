@@ -6,6 +6,7 @@ module DataType
     )
 where
 
+import           Data.Map
 
 {-
 class data {
@@ -62,7 +63,7 @@ baseShape (a,b,c,d) {return Rectangle(a,b,c); }
                  （ 这放在 Java 要表达这种逻辑 ，就得是 抽象类型-> 具体子类 了？ ）
 
         -- Haskell: 每个符号都有明确的参数类型和返回类型（若其为函数。即kind 不是 *）
-                            或 恒定的值       （若其为varible，即kind 为 *）
+                            或 恒定的值       （若其为varible，即kind 为 * ）
 -}
 ------------------------ Record Syntax -------------------------------
 data Person = Person {firstName ::String
@@ -115,7 +116,66 @@ data Maybe a = Nothing | Just a
 data Vector a = Vector a a a deriving (Show)
 
 vplus :: (Num a) => Vector a -> Vector a -> Vector a
+
     -- 实现内部对a 类型使用了 + 运算，则a 应有类型约束 Num
 (Vector i j k) `vplus` (Vector l m n) = Vector (i + l) (j + m) (k + n)
 
+------------------ type synonyms :类型别名 -----------------------------
+type MyStr = [Char]
 
+-- 电话簿：姓名+号码
+type PhoneNumber = String
+type Name = String
+type PhoneBook = [(Name,PhoneNumber)]
+
+inPhoneBook :: Name -> PhoneNumber -> PhoneBook -> Bool
+inPhoneBook name pno pbook = (name, pno) `elem` pbook
+
+
+type MyMap k v = [(k,v)]
+
+type IntMap v = Map Int v
+
+{-
+如果参数是一个template，如何对其类型进行匹配？？
+
+Shape 型参数，我可以用 Circle / Rectangle 来区分匹配 Shape 实例
+———— 这和 C++里的 模板特化匹配是一个道理：
+        非类型参数：可以根据特定值特化匹配；
+        类型参数：可以根据具体类型进行特化匹配
+
+
+-}
+
+----------------- 递归地定义数据结构 --------------------------------
+data List a = Empty
+            | Cons {head::a, tail:: List a }
+    deriving (Show)
+
+list1 = 5 `Cons` Empty
+
+
+-- 用一个运算符代替上面的 Cons 函数 (右结合、优先级为5)
+infixr 5 :-:
+data List' a = Empty'
+             | a :-: List' a
+    deriving (Show)
+
+{-▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇
+运算符函数与fixity 声明：
+    infixr 6 :-:      // :-:这个运算符是右结合的，优先级为6
+    infixl 7 *        // * 这个运算符是左结合的，优先级为7
+
+一般的函数默认是 前缀调用的
+foo :: Int -> Int ->Int
+foo a b  = 定义
+        调用时 foo a b
+        可用中缀调用  a `foo` b
+        
+运算符函数默认是 中缀调用的
+infixr 6 :-:
+(:-:) :: Int -> Int -> Int
+(:-:) a b = 定义
+       调用时 a :-: b
+       可用前缀调用 (:-:) a b
+-}
