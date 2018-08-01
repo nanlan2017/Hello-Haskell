@@ -1,4 +1,4 @@
-module HwtExer1 where
+module Exer1 where
 import           Data.Char                     as DC_
 import           Data.List                     as DL_
 -- https://www.vacationlabs.com/haskell/basic-types-and-functions.html#exercises
