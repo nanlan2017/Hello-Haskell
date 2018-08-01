@@ -3,7 +3,7 @@ module Function where
 import           Data.List
 -- import qualified Data.Map                      as M
 import qualified Data.Char
-import           ListTest                       ( chain )
+-- import           ListTest                       ( chain )
 
 
 
