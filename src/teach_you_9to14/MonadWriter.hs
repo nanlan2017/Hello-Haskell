@@ -19,7 +19,7 @@ applyLog (x, log) f =
 
 v1 = (3, "Smallish gang.") `applyLog` isBigGang
             -- ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇ 关键是：我的函数只要 作用于 Wrapper 里实际的那部分内容，就能得到 盒子 
-            -- （然后▇★▇★▇★▇★▇★▇★▇★▇★▇★▇★▇★▇  自定义 嵌套的两个盒子的内容如何 合并成一层 盒子！）
+            -- （然后▇★▇★▇★▇★▇★▇★▇★▇★▇★▇★▇★ ▇  自定义 嵌套的两个盒子的内容如何 合并成一层 盒子！）
 v2 = (30, "A freaking platoon.") `applyLog` isBigGang
 {-
 ghci> v1
