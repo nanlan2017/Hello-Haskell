@@ -2,3 +2,4 @@
 hello.cabal
 *~
 .DS_Store
+src/rwh*
