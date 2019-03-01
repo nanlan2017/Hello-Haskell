@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fa1640797dd2ff2cb600162a8725696f773d3f6d9702a9a6b65e7f43dfad0759
+-- hash: ba0a041ad2ecd44ca986c8232522cbbaf3dcc181c74397a4939fe3947dde1d14
 
 name:           hello
 version:        0.1.0.0
@@ -10,7 +10,7 @@ description:    Please see the README on GitHub at <https://github.com/githubuse
 homepage:       https://github.com/githubuser/hello#readme
 bug-reports:    https://github.com/githubuser/hello/issues
 author:         Author name here
-maintainer:     example@example.com
+maintainer:     nanlan2017
 copyright:      2018 Author name here
 license:        BSD3
 license-file:   LICENSE
@@ -25,19 +25,22 @@ source-repository head
   location: https://github.com/githubuser/hello
 
 library
-  exposed-modules:
-      Q10
   other-modules:
       Paths_hello
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
-      , containers
-      , parsec
-      , bytestring
-      , directory
-      , mtl
+    , bytestring
+    , containers
+    , directory
+    , filepath
+    , mtl
+    , old-time
+    , parsec
+    , random
+    , regex-posix
+    , array
   default-language: Haskell2010
 
 executable hello-exe
@@ -49,7 +52,17 @@ executable hello-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
     , hello
+    , mtl
+    , old-time
+    , parsec
+    , random
+    , regex-posix
+    , array
   default-language: Haskell2010
 
 test-suite hello-test
@@ -62,5 +75,15 @@ test-suite hello-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , filepath
     , hello
+    , mtl
+    , old-time
+    , parsec
+    , random
+    , regex-posix
+    , array
   default-language: Haskell2010

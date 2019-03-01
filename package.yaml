@@ -1,5 +1,6 @@
 library:
-  source-dirs: src
+  source-dirs: 
+  - src
 tests:
   hello-test:
     source-dirs: test
@@ -11,14 +12,19 @@ tests:
     dependencies:
     - hello
 copyright: 2018 Author name here
-maintainer: example@example.com
+maintainer: nanlan2017
 dependencies:
+- filepath
+- regex-posix
 - mtl
 - parsec
 - containers
 - base >= 4.7 && < 5
 - bytestring
 - directory
+- random
+- old-time
+- array
 name: hello
 version: 0.1.0.0
 extra-source-files:
