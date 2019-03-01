@@ -1,99 +1,8 @@
-module Q10 where
+module Q7X22 where
 
 import           Control.Monad
 import           Control.Applicative
--- *************************************************
-{-
-1 Problem 1
-(*) Find the last element of a list.
--}
-myLast :: [a] -> a
-myLast [] = error "last on empty list!"
--- myLast (_ : x : []) = x  -- 模式匹配如何匹配末尾元素？
-myLast xs = last xs
--------------------------------------------------------------------------------------------
-{-
-2 Problem 2
-(*) Find the last but one element of a list.
--}
-myButLast :: [a] -> a
-myButLast []       = error "empty list!"
-myButLast [x]      = error "only one element!"
-myButLast [x, _]   = x
-myButLast (x : xs) = myButLast xs
-
--------------------------------------------------------------------------------------------
-{-
-3 Problem 3
-(*) Find the K'th element of a list. The first element in the list is number 1.
--}
-elementAt :: [a] -> Int -> a
-{-
-elementAt xs idx | isOver = error "wrong"
-                 | otherwise xs !! idx
-        where 
-                len = length xs
-                isOver = len< xs
--}
-elementAt (x : _ ) 1 = x
-elementAt (x : xs) i = elementAt xs (i - 1)
-
--------------------------------------------------------------------------------------------
-{-
-4 Problem 4
-(*) Find the number of elements of a list.
--}
-myLength :: [a] -> Int
-myLength xs = case xs of
-    []      -> 0
-    (x : l) -> 1 + myLength l
-
-myLength' :: [a] -> Int
-myLength' xs = length [ 1 | i <- xs ]
--------------------------------------------------------------------------------------------
-{-
-5 Problem 5
-(*) Reverse a list.
--}
-myReverse :: [a] -> [a]
-myReverse xs = case xs of
-    []      -> []
-    [x    ] -> [x]
-    (x : s) -> myReverse s ++ myReverse [x]
-
-myReverse' :: [a] -> [a]
-myReverse' xs = case xs of
-    []           -> []
-    -- 如何模式匹配到末尾的元素 (_:x:[]) -> x: myReverse' _
-    all@(x : li) -> last all : (myReverse' $ init all)
-
--------------------------------------------------------------------------------------------
-{-
-6 Problem 6
-(*) Find out whether a list is a palindrome. A palindrome can be read forward or backward; e.g. (x a m a x).
--}
-isPalindrome :: (Ord a) => [a] -> Bool
-isPalindrome xs = xs == reverse xs
-
-
-isPalindrome''' :: (Eq a) => [a] -> Bool
-isPalindrome''' = Control.Monad.liftM2 (==) id reverse
-{-
-liftM2 (==) id reverse $ [1,2,3]
--- 把[1,2,3]分别喂给 id ,reverse ，得到 [1,2,3]和 [3,2,1]
--- 再把这两个喂给== 
-————————————————————————————————————————
-== f g $ x
-等价于  f x == g x    
--}
-
-isPalindrome'''' :: (Eq a) => [a] -> Bool
-isPalindrome'''' = (==) Control.Applicative.<*> reverse
-{-
-== <*> reverse $ [...]
-   <*> [...]  == reverse [...]
--}
--------------------------------------------------------------------------------------------
+-- ******************************************************************************************************
 {-
 7 Problem 7
 flatten a list.
@@ -113,16 +22,14 @@ flatten a list.
               otherwise False
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 -}
-
----------------------- Haskell 中的 List是homogeneous的， 当其为嵌套时，较难处理
 {-
-*Q10> :t [1,2,[1,2],3]
+*> :t [1,2,[1,2],3]
 [1,2,[1,2],3] :: (Num [a], Num a) => [[a]]
-*Q10> :t [1,2,[1,2,[1,2]]]
+*> :t [1,2,[1,2,[1,2]]]
 [1,2,[1,2,[1,2]]] :: (Num [[a]], Num [a], Num a) => [[[a]]]
 -}
-
----------------------- NestedList 表示一个有嵌套的 List
+--- Haskell 中的 List是homogeneous的， 当其为嵌套时，较难处理
+--- NestedList 表示一个有嵌套的 List
 {-
 一、a 是参数类型，需要构建 NestedList 实例时（使用 Elem/List 这两个值构造子）， 才会对应知道a 是具体啥类型
     出现在类型签名中时， Nested a 才能代表一个具体类型（从而代表“参数”：一个类型的值）
@@ -131,7 +38,8 @@ flatten a list.
     2.    NestedList 有一个参数类型a，意味着右边使用的类型里 有的类型是未明确的、用a 类型指代它。
 -}
 data NestedList a = Elem a | List [NestedList a]
----------  这下就可以区分'单个元素'和‘list 元素’了 ----------------▇▇▇▇▇（因为它们可以统一用 NestList类型来匹配，isList 就可以生成 类型签名了！)
+---------  这下就可以区分'单个元素'和‘list 元素’了 
+--------- ▇▇▇▇▇（因为它们可以统一用 NestList类型来匹配，isList 就可以生成 类型签名了！)
 {-
 BNF文法（符号替换）
     nl = var 
@@ -148,7 +56,25 @@ v02 = List []
 flatten :: NestedList a -> [a]
 flatten (Elem x ) = [x]
 flatten (List xs) = foldl (\acc item -> acc ++ flatten item) [] xs  -- concatMap flatten xs
--------------------------------------------------------------------------------------------
+-- ******************************************************************************************************
+{-
+8 Problem 8
+(**) Eliminate consecutive duplicates of list elements.
+
+> compress "aaaabccaadeeee"
+"abcade"
+>>>>>>>>>>>> 思路  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                [命令式]
+
+                                [函数式]
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-}
+
+
+
+
+-- ******************************************************************************************************
 {-
 9 Problem 9
 (**) Pack consecutive duplicates of list elements into sublists. If a list contains repeated elements they should be placed in separate sublists.
@@ -169,16 +95,6 @@ flatten (List xs) = foldl (\acc item -> acc ++ flatten item) [] xs  -- concatMap
 v03 = ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e']
 -- ["aaaa","b","cc","aa","d","eeee"]
 
-
-{-
-pack :: [Char] -> [String]
-pack charlist = foldl merge (([], [])) charlist
-                    where 
-        -- merge
-                    merge ((tempList, resList)) ch = 
-                         | ( null tempList || ch `elem` tempList ) = ((ch:templist, resList))
-                         | otherwise = (([ch], resList++tempList))
--}
 data Stack = Stack{tempList::[Char], resList::[String]} deriving Show
 
 pack' :: [Char] -> Stack
@@ -209,8 +125,9 @@ pack_1 = foldr func []   -- fold 右边  可以很好使用 ：连接
   where
     func x []       = [[x]]
     func x (y : xs) = if x == (head y) then ((x : y) : xs) else ([x] : y : xs)
--------------------------------------------------------------------------------------------
+-- ******************************************************************************************************
 {-
+Problem 10
 encode "aaaabccaadeeee"
 [(4,'a'),(1,'b'),(2,'c'),(2,'a'),(1,'d'),(4,'e')]
 >>>>>>>>>>>> 思路  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -222,7 +139,6 @@ encode :: String -> [(Int, Char)]
 encode = map (\x -> (length x, head x)) . pack_1
 
 -- ******************************************************************************************************
-
 {-
 P11> encodeModified "aaaabccaadeeee"
     [Multiple 4 'a',Single 'b',Multiple 2 'c',
@@ -237,14 +153,27 @@ map f :  (4,'a') --->  Multiple 4 'a'
 -}
 
 data Chs = Multiple Int Char | Single Int Char deriving Show
-encodeM =
-    map (\(i, c) -> if i > 1 then Multiple i c else Single 1 c) . Q10.encode
+encodeM = map (\(i, c) -> if i > 1 then Multiple i c else Single 1 c) . encode
 
 v05 = ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e']
 -- ******************************************************************************************************
+{-
+P12> decodeModified 
+       [Multiple 4 'a',Single 'b',Multiple 2 'c',
+        Multiple 2 'a',Single 'd',Multiple 4 'e']
+"aaaabccaadeeee"
+>>>>>>>>>>>> 思路  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                                [命令式]
 
-encodeD :: String -> [Chs]
-encodeD = foldr make []
+                                [函数式]
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-}
+-- ******************************************************************************************************
+-- Problem 13
+encodeDirect :: String -> [Chs]
+encodeDirect = foldr make []
   where
     make c []                    = [(Single 1 c)]
     make c ((Single i cc) : res) = if c == cc
@@ -252,5 +181,72 @@ encodeD = foldr make []
         else (Single 1 c) : ((Single i cc) : res)
     make c ((Multiple i cc) : res) = if c == cc
         then (Multiple (i + 1) cc) : res
-        else (Single 1 c) : ((Single i cc) : res)
+        else (Single 1 c) : ((Multiple i cc) : res)
 -- ******************************************************************************************************
+{-
+Problem 14
+(*) Duplicate the elements of a list.
+
+> dupli [1, 2, 3]
+[1,1,2,2,3,3]
+>>>>>>>>>>>> 思路  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+典型的1个元素到一个元素的映射，直接map 就好了
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-}
+dupli :: [a] -> [a]
+dupli = concatMap (\x -> [x, x])
+-- ******************************************************************************************************
+{-
+> repli "abc" 3
+"aaabbbccc"
+-}
+repli :: [a] -> Int -> [a]
+repli xs 1 = xs
+repli xs n = xs ++ repli xs (n - 1)
+-- ******************************************************************************************************
+{-
+dropEvery "abcdefghik" 3
+"abdeghk"
+-}
+dropEvery :: [a] -> Int -> [a]
+dropEvery [] n = []
+dropEvery xs n = (init $ take n xs) ++ (dropEvery (drop n xs) n)
+-- ab ++ f defghik 3
+--       de ++ f ghik 3
+--             gh ++ f k 3
+--                   []+[]
+-- abdegh
+{- 挑选元素（和位置有关）的事情用 List comprehension 就行 
+           （和值有关  则用filter                   -}
+dropEvery' :: [a] -> Int -> [a]
+dropEvery' xs n =
+    [ e | i <- [0 .. (length xs - 1)], (i + 1) `mod` n /= 0, let e = xs !! i ]
+-- ******************************************************************************************************
+{-
+题17
+split "abcdefghik" 3
+("abc", "defghik")
+-}
+-- split = splitAt
+-- ******************************************************************************************************
+{-
+题18
+slice ['a','b','c','d','e','f','g','h','i','k'] 3 7
+"cdefg"
+-}
+slice :: [a] -> Int -> Int -> [a]
+slice xs m n = take (n - m + 1) . drop (m - 1) $ xs
+-- ******************************************************************************************************
+{-
+题19
+ rotate ['a','b','c','d','e','f','g','h'] 3
+"defghabc"
+-}
+rotate xs n = (\(l, r) -> (r ++ l)) . splitAt n $ xs
+-- ******************************************************************************************************
+{-
+removeAt 2 "abcd"
+('b',"acd")
+-}
+removeAt n xs = let (l, r) = splitAt n xs in (tail l, init l ++ r)
